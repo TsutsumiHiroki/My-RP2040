@@ -41,6 +41,7 @@ void setup() {
   }         
   //ADXL345を測定モードへ変更  
   adxl345_set_data(ADXL345_POWER_CTL, 0x08);   
+  // adxl345_set_data(0x31, 0b00000011);
   delay(100);
 }
 void loop() {
