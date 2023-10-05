@@ -8,6 +8,7 @@ void setup()
 {
     Wire.begin();
     Serial.begin(115200);
+    Serial.println("setup");
 
     Wire.beginTransmission(AclSenAdrs);
     Wire.write(0x2D);
