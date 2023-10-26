@@ -1,64 +1,105 @@
-#include <TaskManager.h>
+const uint8_t buttonPin = 10;
+const uint8_t maxNumber = 75;
+const uint8_t arraySize = 25;
 
-// uint8_t pool[75 + 1] = {0};
-uint8_t pool[76] = {0};
+uint8_t numbers[arraySize];
+int ind = 0;
 
 void setup()
 {
+    pinMode(buttonPin, INPUT_PULLUP);
     Serial.begin(115200);
+    Serial.println("BINGO");
+    Serial.println("Press button...");
     randomSeed(analogRead(A0));
-
-    pinMode(10, INPUT_PULLUP);
-
-    // Tasks.add([]{
-
-    // }
-    // )
 }
 
 void loop()
 {
-    uint8_t count = 0;
-    uint8_t displaycount = 0;
-    uint8_t selectedNumber = 0;
-
-    if (digitalRead(10) == LOW)
+    if (digitalRead(buttonPin) == LOW)
     {
-        selectedNumber = random(1, 76);
-
-        if (pool[selectedNumber] == 0)
+        delay(300);
+        if (ind < arraySize)
         {
-            Serial.print("出た値: ");
-            Serial.println(selectedNumber);
-
-            pool[selectedNumber]++;
-            count++;
-
-            for (displaycount = 1; displaycount < 76; displaycount++)
+            uint8_t bingoNumber = random(1, maxNumber + 1);
+            if (!contains(numbers, bingoNumber))
             {
-                if (pool[displaycount] == 0)
-                {
-                    Serial.print(" _ ");
-                    // digitalWrite(25, LOW);
-                }
-                else
-                {
-                    Serial.print(" ");
-                    Serial.print(displaycount);
-                    Serial.print(" ");
-                    // digitalWrite(25, HIGH);
-                }
-                if (displaycount % 10 == 9)
-                {
-                    Serial.println("\r");
-                }
+                numbers[ind] = bingoNumber;
+                ind++;
+
+                showNumberframe();
+
+                Serial.print("\e[2;5H");
+                Serial.println(bingoNumber);
+                Serial.println("");
+                showNumbers();
             }
-            Serial.println(" ");
-            Serial.println(" ");
         }
-        // delay(500);
+        else
+        {
+            Serial.println("No more numbers");
+        }
     }
 }
 
+bool contains(uint8_t array[], uint8_t value)
+{
+    for (uint8_t countArraysize = 0; countArraysize < arraySize; countArraysize++)
+    {
+        if (array[countArraysize] == value)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
+void showNumbers()
+{
+    Serial.println("Numbers so far: ");
+    for (uint8_t countShownumber = 0; countShownumber < ind; countShownumber++)
+    {
+        Serial.print(numbers[countShownumber]);
+        Serial.print(" | ");
+    }
+    Serial.println("");
+    Serial.println("");
+}
 
+void showNumberframe()
+{
+    Serial.print("\e[1;1H");
+    Serial.print("-");
+    Serial.print("\e[1;2H");
+    Serial.print("-");
+    Serial.print("\e[1;3H");
+    Serial.print("Number");
+    Serial.print("\e[1;9H");
+    Serial.print("-");
+    Serial.print("\e[1;10H");
+    Serial.print("-");
+    Serial.print("\e[2;1H");
+    Serial.print("|");
+    Serial.print("\e[2;10H");
+    Serial.print("|");
+    Serial.print("\e[3;1H");
+    Serial.print("-");
+    Serial.print("\e[3;2H");
+    Serial.print("-");
+    Serial.print("\e[3;3H");
+    Serial.print("-");
+    Serial.print("\e[3;4H");
+    Serial.print("-");
+    Serial.print("\e[3;5H");
+    Serial.print("-");
+    Serial.print("\e[3;6H");
+    Serial.print("-");
+    Serial.print("\e[3;7H");
+    Serial.print("-");
+    Serial.print("\e[3;8H");
+    Serial.print("-");
+    Serial.print("\e[3;9H");
+    Serial.print("-");
+    Serial.print("\e[3;10H");
+    Serial.print("-");
+}
