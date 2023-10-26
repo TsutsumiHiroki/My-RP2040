@@ -1,12 +1,12 @@
 void setup()
 {
     pinMode(25, OUTPUT_2MA);
+    pinMode(15, INPUT_PULLUP);
 }
 void loop()
 {
-    digitalWrite(25, 0x01);
-    delay(10);
-    digitalWrite(25, 0x00);
-    delay(100);
-
+    if (digitalRead(15) == LOW){
+    digitalWrite(25, HIGH);
+    }else
+    digitalWrite(25, LOW);
 }
