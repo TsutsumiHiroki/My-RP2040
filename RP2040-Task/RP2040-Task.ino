@@ -1,4 +1,3 @@
-
 uint32_t lastTime;
 
 void setup()
@@ -8,9 +7,6 @@ void setup()
 
 void loop()
 {
-    ;
-
-
     uint32_t currentTime = millis();
 
     delay(2);
